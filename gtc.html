@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request GTC Tokens</title>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LdIy3cqAAAAADXtBY0ca_DQT0SHCbw5ZQnXVW5A"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+    .container:hover {
+      transform: scale(1.05);
+    }
+    .container h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #1a2a6c;
+    }
+    .container p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .container input[type="text"] {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .container button {
+      padding: 12px 20px;
+      border: none;
+      background-color: #1a2a6c;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+    .container button:hover {
+      background-color: #0f1d4c;
+    }
+    .container button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<form action="" onsubmit="return false;">
+  <div class="container">
+    <h1>Request GTC Tokens</h1>
+    <p>Enter your wallet address to receive GTC tokens.</p>
+
+    <!-- Input for wallet address -->
+    <input type="text" id="email" placeholder="Enter your email address">
+    <input type="text" id="code" placeholder="Enter the code received by email" style="width: 70%">
+    <!-- 发送验证码按钮 -->
+    <button id="send-code-btn" onclick="sendCode()" style="width: 23%;">Send</button>
+    <input type="text" id="wallet-address" placeholder="Enter your wallet address">
+    <button onclick="onSubmit()">Submit</button>
+  </div>
+</form>
+
+<script>
+  function onSubmit() {
+    const email = document.getElementById("email").value;
+
+    // Validate wallet address
+    if (!email) {
+      alert("Please enter a email address.");
+      return;
+    }
+
+    const code = document.getElementById("code").value;
+
+    // Validate wallet address
+    if (!email) {
+      alert("Please enter a email code.");
+      return;
+    }
+
+    const walletAddress = document.getElementById("wallet-address").value;
+
+    // Validate wallet address
+    if (!walletAddress) {
+      alert("Please enter a wallet address.");
+      return;
+    }
+
+    fetch('https://pre-usdt-7000.1686k.com/tokens/gtc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: walletAddress, email: email, code: code })
+    }).then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert("Test tokens have been sent to your wallet!");
+              } else {
+                alert("Failed to send tokens. Please try again.");
+              }
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendCode() {
+    const email = document.getElementById("email").value;
+
+    // Validate wallet address
+    if (!email) {
+      alert("Please enter a email address.");
+      return;
+    }
+
+    // Execute reCAPTCHA v3 to get token
+    grecaptcha.execute('6LdIy3cqAAAAADXtBY0ca_DQT0SHCbw5ZQnXVW5A', {action: 'submit'}).then(function(token) {
+      fetch('https://pre-usdt-7000.1686k.com/tokens/code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ captcha: token, email: email })
+      }).then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  alert("Test tokens have been sent to your wallet!");
+                } else {
+                  alert("Failed to send tokens. Please try again.");
+                }
+              })
+              .catch(error => console.error("Error:", error));
+    });
+  }
+</script>
+
+</body>
+</html>
