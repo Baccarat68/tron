@@ -70,22 +70,38 @@
 <body>
 
 <form action="" onsubmit="return false;">
-<div class="container">
-  <h1>Request TGC Tokens</h1>
-  <p>Enter your wallet address to receive test tokens.</p>
+  <div class="container">
+    <h1>Request TGC Tokens</h1>
+    <p>Enter your wallet address to receive GTC tokens.</p>
 
-  <!-- Input for wallet address -->
-  <input type="text" id="wallet-address" placeholder="Enter your wallet address">
-  <button class="g-recaptcha"
-          data-sitekey="6LdIy3cqAAAAADXtBY0ca_DQT0SHCbw5ZQnXVW5A"
-          data-callback='onSubmit'
-          data-action='submit'>Submit</button>
-
-</div>
+    <!-- Input for wallet address -->
+    <input type="text" id="email" placeholder="Enter your email address">
+    <input type="text" id="code" placeholder="Enter the code received by email" style="width: 70%">
+    <!-- 发送验证码按钮 -->
+    <button id="send-code-btn" onclick="sendCode()" style="width: 23%;">Send</button>
+    <input type="text" id="wallet-address" placeholder="Enter your wallet address">
+    <button onclick="onSubmit()">Submit</button>
+  </div>
 </form>
 
 <script>
-  function onSubmit(token) {
+  function onSubmit() {
+    const email = document.getElementById("email").value;
+
+    // Validate wallet address
+    if (!email) {
+      alert("Please enter a email address.");
+      return;
+    }
+
+    const code = document.getElementById("code").value;
+
+    // Validate wallet address
+    if (!email) {
+      alert("Please enter a email code.");
+      return;
+    }
+
     const walletAddress = document.getElementById("wallet-address").value;
 
     // Validate wallet address
@@ -95,18 +111,45 @@
     }
 
     fetch('https://pre-usdt-7000.1686k.com/tokens/gtc', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ address: walletAddress, captcha: token })
-        }).then(response => response.json())
-                .then(data => {
-                  if (data.success) {
-                    alert("Test tokens have been sent to your wallet!");
-                  } else {
-                    alert("Failed to send tokens. Please try again.");
-                  }
-                })
-                .catch(error => console.error("Error:", error));
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: walletAddress, email: email, code: code })
+    }).then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert("Test tokens have been sent to your wallet!");
+              } else {
+                alert("Failed to send tokens. Please try again.");
+              }
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendCode() {
+    const email = document.getElementById("email").value;
+
+    // Validate wallet address
+    if (!email) {
+      alert("Please enter a email address.");
+      return;
+    }
+
+    // Execute reCAPTCHA v3 to get token
+    grecaptcha.execute('6LdIy3cqAAAAADXtBY0ca_DQT0SHCbw5ZQnXVW5A', {action: 'submit'}).then(function(token) {
+      fetch('https://pre-usdt-7000.1686k.com/tokens/code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ captcha: token, email: email })
+      }).then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  alert("Test tokens have been sent to your wallet!");
+                } else {
+                  alert("Failed to send tokens. Please try again.");
+                }
+              })
+              .catch(error => console.error("Error:", error));
+    });
   }
 </script>
 
