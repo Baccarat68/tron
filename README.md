@@ -27,7 +27,7 @@
 https://www.tronscan.uk/?usercode=NTI5MjAyNzI2NTM0
 
 USDT兑换TRX(闪兑)
-当前兑换率: 1USDT = 4.399 TRX
+当前兑换率: 1USDT = 2.5 TRX
 
 
 <h2>U换Trx地址: (6秒极速到帐)</h2>
